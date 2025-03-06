@@ -5,26 +5,30 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Paginate from "../components/Paginate";
 import ProductCarousel from "../components/ProductCarousel";
-import { useGetProductsQuery } from "../slices/productsApiSlice";
+import {
+  useGetProductsQuery,
+  useGetTopProductsQuery,
+} from "../slices/productsApiSlice";
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
 
-  const { data, isLoading, error } = useGetProductsQuery({
+  const {
+    data,
+    isLoading: isProductsLoading,
+    error,
+  } = useGetProductsQuery({
     keyword,
     pageNumber,
   });
+  const { isLoading: isCarouselLoading } = useGetTopProductsQuery();
+
+  // Show loader if products are loading, or if carousel is loading on home page
+  const showLoader = isProductsLoading || (!keyword && isCarouselLoading);
 
   return (
     <>
-      {!keyword ? (
-        <ProductCarousel />
-      ) : (
-        <Link to="/" className="btn btn-light mb-4">
-          Go Back
-        </Link>
-      )}
-      {isLoading ? (
+      {showLoader ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">
@@ -32,6 +36,13 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <>
+          {!keyword ? (
+            <ProductCarousel />
+          ) : (
+            <Link to="/" className="btn btn-light mb-4">
+              Go Back
+            </Link>
+          )}
           <h1>Latest Products</h1>
           <Row>
             {data.products.map((product) => (
