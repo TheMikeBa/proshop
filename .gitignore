@@ -12,6 +12,9 @@ node_modules
 # production
 /build
 
+# backup files
+*.bak
+
 # misc
 .DS_Store
 .env
