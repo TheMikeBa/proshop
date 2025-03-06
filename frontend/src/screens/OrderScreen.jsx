@@ -103,9 +103,9 @@ const OrderScreen = () => {
       });
   }
 
-  function deliverOrderHandler() {
+  async function deliverOrderHandler() {
     try {
-      deliverOrder(orderId);
+      await deliverOrder(orderId).unwrap();
       refetch();
       toast.success("Order Delivered");
     } catch (error) {
@@ -225,7 +225,6 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
-              {/* MARK AS DELIVERED PLACEHOLDER */}
               {loadingDeliver && <Loader />}
               {userInfo &&
                 userInfo.isAdmin &&
